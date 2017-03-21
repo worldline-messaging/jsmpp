@@ -41,7 +41,7 @@ public enum StringParameter {
 	/**
 	 * Invalid address range assume should return the error of invalid source address.
 	 */
-	ADDRESS_RANGE(StringType.C_OCTET_STRING, 0, 41, true, SMPPConstant.STAT_ESME_RINVSRCADR),
+	ADDRESS_RANGE(StringType.C_OCTET_STRING, 0, Integer.parseInt(System.getProperty("jsmpp.address.range.max","41")), true, SMPPConstant.STAT_ESME_RINVSRCADR),
     
 	SERVICE_TYPE(StringType.C_OCTET_STRING, 0, 6, true, SMPPConstant.STAT_ESME_RINVSERTYP),
 	SOURCE_ADDR(StringType.C_OCTET_STRING, 0, 21, true, SMPPConstant.STAT_ESME_RINVSRCADR),
