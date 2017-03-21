@@ -32,14 +32,6 @@
       </dependency>
     </dependencies>
 
-    <distributionManagement>
-        <repository>
-            <id>bintray-worldline-messaging-org-maven</id>
-            <name>worldline-messaging-org-maven</name>
-            <url>https://api.bintray.com/maven/worldline-messaging-org/maven/jsmpp/;publish=1</url>
-        </repository>
-    </distributionManagement>
-
     <build>
         <plugins>
             <plugin>
