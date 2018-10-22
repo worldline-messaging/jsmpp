@@ -214,11 +214,11 @@ public class SMPPSession extends AbstractSession implements ClientSession {
 	public String connectAndBind(String host, int port,
             BindParameter bindParam, long timeout) 
 	        throws IOException {
-	    logger.debug("Connect and bind to {} port {}", host, port);
-		if (sequence().currentValue() != 1) {
-			throw new IOException("Failed connecting");
+		logger.debug("Connect and bind to {} port {}", host, port);
+		if (getSessionState() != SessionState.CLOSED) {
+			throw new IOException("Session state is not closed");
 		}
-		
+
 		conn = connFactory.createConnection(host, port);
 		logger.info("Connected to {}", conn.getInetAddress());
 		
@@ -619,10 +619,10 @@ public class SMPPSession extends AbstractSession implements ClientSession {
 	        } catch (SocketTimeoutException e) {
 	            notifyNoActivity();
 	        } catch (IOException e) {
-	            logger.warn("IOException while reading: {}", e.getMessage());
+	            logger.warn("IOException while reading:", e);
 	            close();
 	        } catch (RuntimeException e) {
-			        logger.warn("RuntimeException: {}", e.getMessage());
+			        logger.warn("RuntimeException:", e);
 						  unbindAndClose();
 		      }
 	    }
@@ -660,8 +660,8 @@ public class SMPPSession extends AbstractSession implements ClientSession {
                 }
     	        
                	logger.info("Changing processor degree to {}", getPduProcessorDegree());
-               	((ThreadPoolExecutor)pduReaderWorker.executorService).setCorePoolSize(getPduProcessorDegree());
                	((ThreadPoolExecutor)pduReaderWorker.executorService).setMaximumPoolSize(getPduProcessorDegree());
+               	((ThreadPoolExecutor)pduReaderWorker.executorService).setCorePoolSize(getPduProcessorDegree());
 	        }
 	    }
 	}

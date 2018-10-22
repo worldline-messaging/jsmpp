@@ -174,8 +174,8 @@ public class SMPPOutboundSession extends AbstractSession implements OutboundClie
   public BindRequest connectAndOutbind(String host, int port, OutbindParameter outbindParameter, long timeout)
       throws IOException {
     logger.debug("Connect and bind to {} port {}", host, port);
-    if (sequence().currentValue() != 1) {
-      throw new IOException("Connection is already used");
+    if (getSessionState() != SessionState.CLOSED) {
+      throw new IOException("Session state is not closed");
     }
 
     conn = connFactory.createConnection(host, port);
@@ -452,11 +452,11 @@ public class SMPPOutboundSession extends AbstractSession implements OutboundClie
         notifyNoActivity();
       }
       catch (IOException e) {
-        logger.warn("IOException while reading: {}", e.getMessage());
+        logger.warn("IOException while reading:", e);
         close();
       }
       catch (RuntimeException e) {
-        logger.warn("RuntimeException: {}", e.getMessage());
+        logger.warn("RuntimeException:", e);
         unbindAndClose();
       }
     }
@@ -494,8 +494,8 @@ public class SMPPOutboundSession extends AbstractSession implements OutboundClie
         }
 
         logger.info("Changing processor degree to {}", getPduProcessorDegree());
-        ((ThreadPoolExecutor) pduReaderWorker.executorService).setCorePoolSize(getPduProcessorDegree());
         ((ThreadPoolExecutor) pduReaderWorker.executorService).setMaximumPoolSize(getPduProcessorDegree());
+        ((ThreadPoolExecutor) pduReaderWorker.executorService).setCorePoolSize(getPduProcessorDegree());
       }
     }
   }
